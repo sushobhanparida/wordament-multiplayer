@@ -1,0 +1,140 @@
+.word-input-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.word-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.word-input {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #e1e5e9;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.word-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.word-input:disabled {
+  background: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.submit-btn {
+  padding: 15px 25px 15px 50px;
+  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn::before {
+  content: '✨';
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(78, 205, 196, 0.4);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.found-words {
+  border-top: 2px solid #e9ecef;
+  padding-top: 20px;
+}
+
+.found-words h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.words-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.found-word {
+  background: linear-gradient(135deg, #98FB98 0%, #90EE90 100%);
+  padding: 12px 15px;
+  border-radius: 10px;
+  border-left: 4px solid #32CD32;
+  font-weight: 600;
+  color: #2E8B57;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.found-word::before {
+  content: '🎉';
+  position: absolute;
+  right: 10px;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
+.found-word:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(152, 251, 152, 0.3);
+}
+
+.found-word:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.no-words {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .word-form {
+    flex-direction: column;
+  }
+  
+  .submit-btn {
+    width: 100%;
+  }
+} 

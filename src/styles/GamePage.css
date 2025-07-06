@@ -1,0 +1,228 @@
+.game-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 50%, #a5d6a7 100%);
+  padding: 20px;
+  position: relative;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.game-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 195, 74, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.15);
+}
+
+.game-header h1 {
+  font-size: 2rem;
+  color: #2e7d32;
+  margin: 0;
+  font-weight: 700;
+  position: relative;
+}
+
+.game-header h1::before {
+  content: '🎯';
+  margin-right: 10px;
+}
+
+.room-info {
+  background: #f1f8e9;
+  border: 2px solid #81c784;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.theme-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f8e9;
+  border: 2px solid #81c784;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.theme-label, .target-label {
+  color: #4caf50;
+  font-weight: 700;
+}
+
+.theme-value {
+  color: #2e7d32;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.target-value {
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+.game-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.game-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.game-right {
+  background: #ffffff;
+  border: 2px solid #81c784;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.15);
+  height: fit-content;
+}
+
+.game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.game-over-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.game-over-modal h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.final-scores {
+  margin-bottom: 30px;
+}
+
+.final-score {
+  background: #f8f9fa;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.game-actions {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .game-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .theme-info {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+  
+  .game-right {
+    order: -1;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.loading-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 15px;
+  border: 2px solid rgba(76, 175, 80, 0.3);
+}
+
+.round-info {
+  background: #f1f8e9;
+  border: 2px solid #81c784;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-secondary {
+  background: #66bb6a;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5cb85c;
+  transform: translateY(-1px);
+} 

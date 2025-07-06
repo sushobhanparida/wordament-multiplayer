@@ -1,0 +1,616 @@
+.game-board-container {
+  background: #ffffff;
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.15);
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Game Board - Now at the top */
+.game-board {
+  display: inline-block;
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+  touch-action: none; /* Prevents default touch behaviors */
+}
+
+.board-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.board-row:last-child {
+  margin-bottom: 0;
+}
+
+.board-cell {
+  width: 70px;
+  height: 70px;
+  background: #4caf50;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+  border: 2px solid #45a049;
+  position: relative;
+  touch-action: manipulation;
+}
+
+.board-cell:hover:not(.in-path) {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+  background: linear-gradient(135deg, #45a049, #388e3c);
+  border-color: #2e7d32;
+}
+
+.board-cell:hover.in-path {
+  transform: scale(1.12);
+  box-shadow: 0 8px 20px rgba(255, 152, 0, 0.6);
+}
+
+.board-cell:active {
+  transform: scale(0.95);
+}
+
+/* Current path (orange) */
+.board-cell.in-path {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.5);
+  border-color: #e65100;
+  color: #ffffff;
+  font-weight: 800;
+  position: relative;
+  z-index: 10;
+}
+
+/* Found/locked-in (green) */
+.board-cell.selected {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+  border-color: #2e7d32;
+  color: #ffffff;
+  font-weight: 800;
+  position: relative;
+  z-index: 10;
+}
+
+.board-cell.dragging {
+  background: linear-gradient(135deg, #f57c00, #e65100);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(245, 124, 0, 0.4);
+  border-color: #d84315;
+}
+
+
+
+/* Connection lines between selected cells */
+.game-board {
+  position: relative;
+}
+
+.connection-line {
+  position: absolute;
+  background: linear-gradient(45deg, #ff9800, #f57c00);
+  height: 3px;
+  border-radius: 2px;
+  z-index: 5;
+  box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
+}
+
+/* Current Word Section - Below the puzzle */
+.current-word-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f1f8e9;
+  border: 2px solid #81c784;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+}
+
+.current-word {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.word-label {
+  font-size: 1rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.word-display {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c3e50;
+  min-height: 2rem;
+  display: inline-block;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 2px solid #81c784;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.word-display:not(:empty) {
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+  border-color: #4caf50;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  transform: scale(1.02);
+}
+
+
+
+.word-display.already-found {
+  background: #ffebee;
+  border-color: #ef5350;
+  color: #c62828;
+  text-decoration: line-through;
+}
+
+.already-found-indicator {
+  color: #c62828;
+  font-weight: 600;
+  font-size: 0.9rem;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.word-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.submit-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.submit-btn.active {
+  background: #2e7d32;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+}
+
+.submit-btn:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.clear-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.clear-btn:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+/* Word Selection Path */
+.word-selection {
+  margin-top: 15px;
+  padding: 12px;
+  background: #e8f5e8;
+  border: 2px solid #81c784;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.selection-label {
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.selected-letters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.selected-letter {
+  background: #4caf50;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+  animation: letterPop 0.3s ease-out;
+}
+
+.arrow {
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 0 2px;
+}
+
+@keyframes letterPop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Tablet Responsive Design */
+@media (max-width: 1024px) {
+  .game-board-container {
+    padding: 20px;
+    margin: 15px;
+  }
+
+  .game-board {
+    padding: 18px;
+  }
+
+  .board-cell {
+    width: 65px;
+    height: 65px;
+    font-size: 1.5rem;
+  }
+
+  .board-row {
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .current-word-section {
+    padding: 15px;
+  }
+
+  .word-display {
+    font-size: 1.3rem;
+    padding: 8px 12px;
+  }
+
+  .submit-btn, .clear-btn {
+    padding: 16px 24px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .game-board-container {
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .game-board {
+    padding: 12px;
+    border-radius: 15px;
+  }
+
+  .board-cell {
+    width: 55px;
+    height: 55px;
+    font-size: 1.4rem;
+    border-radius: 8px;
+  }
+
+  .board-row {
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .current-word-section {
+    padding: 12px;
+    margin-top: 15px;
+  }
+
+  .current-word {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .word-display {
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .word-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .submit-btn, .clear-btn {
+    width: 100%;
+    max-width: 180px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  .word-selection {
+    padding: 10px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .selected-letters {
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .selected-letter {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .arrow {
+    font-size: 1rem;
+  }
+}
+
+/* Small Mobile Responsive Design */
+@media (max-width: 480px) {
+  .game-board-container {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+  }
+
+  .game-board {
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .board-cell {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+    border-radius: 6px;
+    border-width: 1px;
+  }
+
+  .board-row {
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+
+  .current-word-section {
+    padding: 10px;
+    margin-top: 12px;
+  }
+
+  .word-display {
+    font-size: 1.1rem;
+    padding: 6px 10px;
+    min-width: 100px;
+  }
+
+  .submit-btn, .clear-btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    max-width: 150px;
+  }
+
+  .word-selection {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .selected-letter {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+
+  .arrow {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Mobile Responsive Design */
+@media (max-width: 360px) {
+  .game-board-container {
+    padding: 8px;
+    margin: 3px;
+  }
+
+  .game-board {
+    padding: 6px;
+  }
+
+  .board-cell {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+  }
+
+  .board-row {
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .current-word-section {
+    padding: 8px;
+  }
+
+  .word-display {
+    font-size: 1rem;
+    padding: 5px 8px;
+    min-width: 80px;
+  }
+
+  .submit-btn, .clear-btn {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    max-width: 120px;
+  }
+
+  .word-selection {
+    padding: 6px;
+  }
+
+  .selected-letter {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .board-cell {
+    min-height: 44px; /* iOS minimum touch target */
+    min-width: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .submit-btn, .clear-btn {
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .board-cell:hover {
+    transform: none; /* Disable hover effects on touch devices */
+  }
+
+  .board-cell:active {
+    transform: scale(0.95);
+    background: #45a049;
+  }
+
+  .board-cell.selected:active {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #f57c00, #e65100);
+  }
+
+  /* Improve touch feedback */
+  .game-board {
+    touch-action: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text selection during touch */
+  .game-board-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .game-board-container {
+    padding: 10px;
+    margin: 5px;
+  }
+
+  .game-board {
+    padding: 8px;
+  }
+
+  .board-cell {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .board-row {
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .current-word-section {
+    padding: 8px;
+    margin-top: 10px;
+  }
+
+  .word-actions {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .submit-btn, .clear-btn {
+    max-width: 140px;
+    padding: 10px 16px;
+  }
+} 
