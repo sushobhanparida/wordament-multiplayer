@@ -152,14 +152,13 @@ export const SocketProvider = ({ children }) => {
 
     newSocket.on('gameEnded', (data) => {
       console.log('Game ended:', data);
-      const newGameData = {
-        ...gameData,
+      setGameData(prev => ({
+        ...prev,
         finalScores: data.finalScores,
         roundResults: data.roundResults,
         gameState: 'finished'
-      };
-      console.log('Setting gameData for game end:', newGameData);
-      setGameData(newGameData);
+      }));
+      console.log('Setting gameData for game end:', data);
     });
 
     newSocket.on('error', (data) => {
