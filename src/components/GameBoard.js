@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import '../styles/GameBoard.css';
-import popSound from '../assets/success-chime.mp3';
 
 const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }) => {
   const [selectedCells, setSelectedCells] = useState([]);
@@ -10,7 +9,6 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
   const [popCells, setPopCells] = useState([]);
   const [foundHighlightCells, setFoundHighlightCells] = useState([]);
   const boardRef = useRef(null);
-  const audioRef = useRef(null);
 
   const handleCellClick = useCallback((rowIndex, colIndex) => {
     if (gameState !== 'playing') return;
@@ -109,16 +107,28 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
     setBoard(newBoard);
   }, [board, setBoard]);
 
+  function playChime() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 880;
+    g.gain.value = 0.2;
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    o.frequency.linearRampToValueAtTime(1760, ctx.currentTime + 0.15);
+    g.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+    o.stop(ctx.currentTime + 0.3);
+  }
+
   const submitWord = useCallback(() => {
     if (currentWord.length >= 3) {
       onWordSubmit(currentWord);
       setFoundCellIds(prev => [...prev, ...selectedCells]);
       setPopCells(selectedCells);
       setFoundHighlightCells(selectedCells);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play();
-      }
+      playChime();
       setTimeout(() => {
         setFoundHighlightCells([]);
         clearSelection();
@@ -332,8 +342,6 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
           </div>
         </div>
       )}
-
-      <audio ref={audioRef} src={popSound} preload="auto" />
     </div>
   );
 };
