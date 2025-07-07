@@ -4,19 +4,63 @@ const fs = require('fs');
 const path = require('path');
 
 const wordThemes = {
-  APPLE: "Fruit",
-  TIGER: "Animal",
-  SCHOOL: "Place",
-  RIVER: "Geography",
-  GOLD: "Metal",
-  LION: "Animal",
-  FISH: "Animal",
-  MATH: "Subject",
+  // Startups/Tech
+  GOOGLE: "Tech Company",
+  TESLA: "Startup/Automotive",
+  SPACEX: "Startup/Space",
+  APPLE: "Tech Company",
+  MICROSOFT: "Tech Company",
+  AMAZON: "E-commerce",
+  NETFLIX: "Streaming",
+  AIRBNB: "Startup/Hospitality",
+  UBER: "Startup/Transport",
+  ZOOM: "Tech/Remote Work",
+  TWITTER: "Social Media",
+  META: "Tech Company",
+  // Brands
+  NIKE: "Brand/Sportswear",
+  ADIDAS: "Brand/Sportswear",
+  SAMSUNG: "Brand/Electronics",
+  COCA: "Brand/Beverage",
+  PEPSI: "Brand/Beverage",
+  SONY: "Brand/Electronics",
+  IKEA: "Brand/Furniture",
+  // Gen Z Lingo
+  YEET: "Gen Z Lingo",
+  SUS: "Gen Z Lingo",
+  LIT: "Gen Z Lingo",
+  FAM: "Gen Z Lingo",
+  VIBE: "Gen Z Lingo",
+  FLEX: "Gen Z Lingo",
+  GLOW: "Gen Z Lingo",
+  // World News/Recent Affairs
+  COVID: "Recent Affairs",
+  BREXIT: "World News",
+  CLIMATE: "World News",
+  VIRUS: "World News",
+  // Crypto/Finance
+  BITCOIN: "Crypto",
+  ETHEREUM: "Crypto",
+  DOGE: "Crypto/Meme",
+  // Sports
+  MESSI: "Sports",
+  RONALDO: "Sports",
+  // Entertainment
+  MARVEL: "Entertainment",
+  DISNEY: "Entertainment",
   // ...add more as needed
 };
 
 function getThemeForWord(word) {
-  return wordThemes[word?.toUpperCase()] || "Unknown";
+  const upper = word?.toUpperCase();
+  if (wordThemes[upper]) return wordThemes[upper];
+  if (upper.endsWith("LY")) return "Adverb";
+  if (upper.endsWith("ING")) return "Verb (Gerund)";
+  if (upper.endsWith("ED")) return "Verb (Past Tense)";
+  if (upper.endsWith("TION")) return "Noun (Process)";
+  if (upper.length >= 8) return "Long Word";
+  if (upper.length <= 4) return "Short Word";
+  return "General";
 }
 
 class GameManager {
@@ -137,7 +181,7 @@ class GameManager {
       const allPossibleWords = generateAllPossibleWords(gameBoard);
       const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
       const rankedWords = rankWordsByDifficulty(filteredWords);
-      const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
+      const hardestWord = rankedWords.reverse().find(w => w.word.length >= 4)?.word || null;
       
       room.gameState = 'playing';
       room.gameBoard = gameBoard;
@@ -236,7 +280,7 @@ class GameManager {
       const allPossibleWords = generateAllPossibleWords(room.gameBoard);
       const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
       const rankedWords = rankWordsByDifficulty(filteredWords);
-      const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
+      const hardestWord = rankedWords.reverse().find(w => w.word.length >= 4)?.word || null;
       
       // Create round result
       const roundResult = {
@@ -299,7 +343,7 @@ class GameManager {
           const allPossibleWords = generateAllPossibleWords(gameBoard);
           const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
           const rankedWords = rankWordsByDifficulty(filteredWords);
-          const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
+          const hardestWord = rankedWords.reverse().find(w => w.word.length >= 4)?.word || null;
           
           room.gameState = 'playing';
           room.gameBoard = gameBoard;
