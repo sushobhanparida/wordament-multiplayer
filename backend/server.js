@@ -4,6 +4,8 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 
 const GameManager = require('./gameManager');
 const { generateGameBoard, getRandomTheme } = require('./gameUtils');
@@ -13,14 +15,19 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: process.env.NODE_ENV === 'production' 
-      ? ["https://your-actual-domain.vercel.app", "https://your-actual-domain.vercel.app/"] 
+      ? ["https://wordament-multiplayer-frontend.vercel.app"] 
       : "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? ["https://wordament-multiplayer-frontend.vercel.app"]
+    : "http://localhost:3000",
+  credentials: true
+}));
 app.use(express.json());
 
 // Game manager instance
@@ -30,6 +37,14 @@ const gameManager = new GameManager();
 const generateRoomCode = () => {
   return Math.random().toString(36).substr(2, 8).toUpperCase();
 };
+
+const dictionaryPath = path.join(__dirname, 'englishDictionary.txt');
+const englishWords = new Set(
+  fs.readFileSync(dictionaryPath, 'utf-8')
+    .split('\n')
+    .map(word => word.trim().toUpperCase())
+    .filter(Boolean)
+);
 
 // REST API Routes
 app.get('/api/health', (req, res) => {

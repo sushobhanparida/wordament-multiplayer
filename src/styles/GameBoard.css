@@ -101,7 +101,18 @@
   border-color: #d84315;
 }
 
-
+/* Current swipe path (blue) */
+.board-cell.current-swipe {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  transform: scale(1.12);
+  box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
+  border-color: #1565c0;
+  color: #fff;
+  font-weight: 800;
+  position: relative;
+  z-index: 11;
+  transition: background 0.2s, box-shadow 0.2s;
+}
 
 /* Connection lines between selected cells */
 .game-board {
@@ -163,8 +174,6 @@
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
   transform: scale(1.02);
 }
-
-
 
 .word-display.already-found {
   background: #ffebee;
@@ -613,4 +622,26 @@
     max-width: 140px;
     padding: 10px 16px;
   }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); box-shadow: 0 0 16px #42a5f5; }
+  100% { transform: scale(1); }
+}
+
+.board-cell.pop {
+  animation: pop 0.35s cubic-bezier(0.4, 0.2, 0.2, 1);
+  z-index: 20;
+}
+
+/* Found highlight (bright green) */
+.board-cell.found-highlight {
+  background: linear-gradient(135deg, #43ea6d, #1de982);
+  box-shadow: 0 0 24px 6px #43ea6d, 0 0 0 2px #1de982;
+  border-color: #1de982;
+  color: #fff;
+  font-weight: 900;
+  z-index: 30;
+  transition: background 0.2s, box-shadow 0.2s;
 } 

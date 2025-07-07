@@ -26,7 +26,6 @@ const WordResults = ({ allWords, foundWords, theme, targetWord, onClose }) => {
         
         <div className="theme-info">
           <h3>Theme: <span className="theme-name">{theme}</span></h3>
-          <p>Target Word: <span className="target-word">{targetWord}</span> (50 points)</p>
         </div>
 
         <div className="stats-summary">

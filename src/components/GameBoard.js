@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import '../styles/GameBoard.css';
+import popSound from '../assets/success-chime.mp3';
 
 const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }) => {
   const [selectedCells, setSelectedCells] = useState([]);
   const [currentWord, setCurrentWord] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const [foundCellIds, setFoundCellIds] = useState([]);
+  const [popCells, setPopCells] = useState([]);
+  const [foundHighlightCells, setFoundHighlightCells] = useState([]);
   const boardRef = useRef(null);
+  const audioRef = useRef(null);
 
   const handleCellClick = useCallback((rowIndex, colIndex) => {
     if (gameState !== 'playing') return;
@@ -109,7 +113,16 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
     if (currentWord.length >= 3) {
       onWordSubmit(currentWord);
       setFoundCellIds(prev => [...prev, ...selectedCells]);
-      clearSelection();
+      setPopCells(selectedCells);
+      setFoundHighlightCells(selectedCells);
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
+      setTimeout(() => {
+        setFoundHighlightCells([]);
+        clearSelection();
+      }, 1000);
     }
   }, [currentWord, onWordSubmit, clearSelection, selectedCells]);
 
@@ -169,6 +182,13 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
       document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [handleMouseUp, handleTouchEnd]);
+
+  useEffect(() => {
+    if (popCells.length > 0) {
+      const timer = setTimeout(() => setPopCells([]), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [popCells]);
 
   // Check if current word is already found
   const isWordAlreadyFound = foundWords.includes(currentWord.toUpperCase());
@@ -251,7 +271,7 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
             {row.map((cell, colIndex) => (
               <div
                 key={cell.id}
-                className={`board-cell ${cell.inPath ? 'in-path' : ''} ${foundCellIds.includes(cell.id) ? 'selected' : ''} ${isDragging ? 'dragging' : ''}`}
+                className={`board-cell ${foundHighlightCells.includes(cell.id) ? 'found-highlight' : ''} ${cell.inPath ? (foundCellIds.includes(cell.id) ? 'selected' : 'current-swipe') : ''} ${isDragging ? 'dragging' : ''} ${popCells.includes(cell.id) ? 'pop' : ''}`}
                 data-row={rowIndex}
                 data-col={colIndex}
                 onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
@@ -312,6 +332,8 @@ const GameBoard = ({ board, setBoard, gameState, onWordSubmit, foundWords = [] }
           </div>
         </div>
       )}
+
+      <audio ref={audioRef} src={popSound} preload="auto" />
     </div>
   );
 };

@@ -37,7 +37,6 @@ const RoundResults = ({ roundResult, players, currentPlayer, onReady, onClose })
         
         <div className="round-info">
           <h3>Theme: <span className="theme-name">{roundResult.theme}</span></h3>
-          <p>Target Word: <span className="target-word">{roundResult.targetWord}</span> (50 points)</p>
         </div>
 
         <div className="stats-summary">
