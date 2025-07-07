@@ -296,15 +296,6 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-
-// For Vercel deployment, export the server
-if (process.env.NODE_ENV === 'production') {
-  // Vercel serverless function
-  module.exports = server;
-} else {
-  // Local development
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Frontend should connect to: http://localhost:${PORT}`);
-  });
-} 
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+}); 
