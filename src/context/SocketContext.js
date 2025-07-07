@@ -22,8 +22,8 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // Connect to the backend server
-    const serverUrl = process.env.NODE_ENV === 'production' 
-      ? window.location.origin 
+    const serverUrl = process.env.NODE_ENV === 'production'
+      ? 'https://wordament-multiplayer-backend.onrender.com'
       : 'http://localhost:5000';
     
     const newSocket = io(serverUrl, {
