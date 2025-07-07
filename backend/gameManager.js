@@ -3,6 +3,22 @@ const { calculateWordScore, generateAllPossibleWords, rankWordsByDifficulty } = 
 const fs = require('fs');
 const path = require('path');
 
+const wordThemes = {
+  APPLE: "Fruit",
+  TIGER: "Animal",
+  SCHOOL: "Place",
+  RIVER: "Geography",
+  GOLD: "Metal",
+  LION: "Animal",
+  FISH: "Animal",
+  MATH: "Subject",
+  // ...add more as needed
+};
+
+function getThemeForWord(word) {
+  return wordThemes[word?.toUpperCase()] || "Unknown";
+}
+
 class GameManager {
   constructor() {
     this.rooms = new Map();
@@ -118,12 +134,15 @@ class GameManager {
 
       // Generate game board and theme
       const gameBoard = require('./gameUtils').generateGameBoard();
-      const { theme, targetWord } = require('./gameUtils').getRandomTheme();
+      const allPossibleWords = generateAllPossibleWords(gameBoard);
+      const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
+      const rankedWords = rankWordsByDifficulty(filteredWords);
+      const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
       
       room.gameState = 'playing';
       room.gameBoard = gameBoard;
-      room.theme = theme;
-      room.targetWord = targetWord;
+      room.theme = getThemeForWord(hardestWord);
+      room.targetWord = hardestWord;
       room.startTime = Date.now();
       room.endTime = room.startTime + (1 * 60 * 1000); // 1 minute
       room.currentRound = 1; // Start at round 1, not 0
@@ -135,7 +154,7 @@ class GameManager {
         room.foundWords[player] = [];
       });
 
-      console.log(`GameManager: Game started in room ${roomCode} with theme: ${theme}, target: ${targetWord}, isSolo: ${room.isSolo}`);
+      console.log(`GameManager: Game started in room ${roomCode} with theme: ${room.theme}, target: ${room.targetWord}, isSolo: ${room.isSolo}`);
       return true;
     } catch (error) {
       console.error('GameManager: Error starting game:', error);
@@ -217,6 +236,7 @@ class GameManager {
       const allPossibleWords = generateAllPossibleWords(room.gameBoard);
       const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
       const rankedWords = rankWordsByDifficulty(filteredWords);
+      const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
       
       // Create round result
       const roundResult = {
@@ -231,6 +251,9 @@ class GameManager {
       room.roundResults.push(roundResult);
       room.gameState = 'roundEnd';
       room.readyPlayers.clear();
+      
+      room.targetWord = hardestWord;
+      room.theme = getThemeForWord(hardestWord);
       
       console.log(`GameManager: Round ${room.currentRound} ended in room ${roomCode}`);
       console.log(`GameManager: Round result:`, roundResult);
@@ -273,12 +296,15 @@ class GameManager {
         } else {
           // Start next round
           const gameBoard = require('./gameUtils').generateGameBoard();
-          const { theme, targetWord } = require('./gameUtils').getRandomTheme();
+          const allPossibleWords = generateAllPossibleWords(gameBoard);
+          const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
+          const rankedWords = rankWordsByDifficulty(filteredWords);
+          const hardestWord = rankedWords.length > 0 ? rankedWords[rankedWords.length - 1].word : null;
           
           room.gameState = 'playing';
           room.gameBoard = gameBoard;
-          room.theme = theme;
-          room.targetWord = targetWord;
+          room.theme = getThemeForWord(hardestWord);
+          room.targetWord = hardestWord;
           room.startTime = Date.now();
           room.endTime = room.startTime + (1 * 60 * 1000); // 1 minute
           room.readyPlayers.clear();
