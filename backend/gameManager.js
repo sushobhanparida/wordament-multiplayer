@@ -1,10 +1,20 @@
 const { v4: uuidv4 } = require('uuid');
 const { calculateWordScore, generateAllPossibleWords, rankWordsByDifficulty } = require('./gameUtils');
+const fs = require('fs');
+const path = require('path');
 
 class GameManager {
   constructor() {
     this.rooms = new Map();
     this.players = new Map(); // socketId -> player info
+
+    const dictionaryPath = path.join(__dirname, 'englishDictionary.txt');
+    this.englishWords = new Set(
+      fs.readFileSync(dictionaryPath, 'utf-8')
+        .split('\n')
+        .map(word => word.trim().toUpperCase())
+        .filter(Boolean)
+    );
   }
 
   createRoom(roomCode, playerName, isSolo = false, totalRounds = 3) {
@@ -205,7 +215,8 @@ class GameManager {
 
       // Generate all possible words for this round
       const allPossibleWords = generateAllPossibleWords(room.gameBoard);
-      const rankedWords = rankWordsByDifficulty(allPossibleWords);
+      const filteredWords = allPossibleWords.filter(word => this.englishWords.has(word.toUpperCase()));
+      const rankedWords = rankWordsByDifficulty(filteredWords);
       
       // Create round result
       const roundResult = {
